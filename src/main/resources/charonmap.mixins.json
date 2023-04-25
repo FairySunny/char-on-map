@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "icu.sunny.mc.charonmap.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "EmptyMapItemMixin"
+  ],
+  "client": [],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

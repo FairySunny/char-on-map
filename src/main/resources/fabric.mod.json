@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "charonmap",
+  "version": "${version}",
+
+  "name": "Char On Map",
+  "description": "Display unicode characters on maps.",
+  "authors": [
+    "FairySunny"
+  ],
+  "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
+  },
+
+  "license": "GPL-3.0",
+  "icon": "assets/charonmap/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "icu.sunny.mc.charonmap.Mod"
+    ]
+  },
+  "mixins": [
+    "charonmap.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.14.17",
+    "minecraft": "~1.19.2",
+    "java": ">=17"
+  },
+  "suggests": {
+  }
+}
