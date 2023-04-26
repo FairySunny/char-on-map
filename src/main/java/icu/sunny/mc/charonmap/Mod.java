@@ -11,23 +11,20 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 
 public class Mod implements ModInitializer {
 	public static final String MOD_ID = "charonmap";
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-	private static byte[] FONT_BITMAPS;
+	private static byte[] FONT_BITMAP;
 
-	public static long getFontBitmap(char ch) {
-		if (FONT_BITMAPS == null || ch >= FONT_BITMAPS.length / 8) {
-			return 0;
+	public static byte[] getFontBitmap(int codePoint) {
+		if (FONT_BITMAP == null || codePoint >= FONT_BITMAP.length / 32) {
+			return new byte[32];
 		}
-		long bitmap = 0L;
-		for (int i = 0; i < 8; i++) {
-			bitmap |= (long)FONT_BITMAPS[ch * 8 + i] << i * 8;
-		}
-		return bitmap;
+		return Arrays.copyOfRange(FONT_BITMAP, codePoint * 32, (codePoint + 1) * 32);
 	}
 
 	@Override
@@ -42,7 +39,9 @@ public class Mod implements ModInitializer {
 			public void reload(ResourceManager manager) {
 				manager.getResource(new Identifier(MOD_ID, "bitmaps/font.bin")).ifPresent(resource -> {
 					try(InputStream is = resource.getInputStream()) {
-						FONT_BITMAPS = is.readAllBytes();
+						long t = System.nanoTime();
+						FONT_BITMAP = is.readAllBytes();
+						LOGGER.info("Loaded font bitmap in {}ms", (System.nanoTime() - t) / 1e6);
 					} catch (IOException e) {
 						LOGGER.error("Failed to load font bitmap", e);
 					}

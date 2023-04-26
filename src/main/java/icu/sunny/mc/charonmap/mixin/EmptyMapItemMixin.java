@@ -43,11 +43,13 @@ public class EmptyMapItemMixin {
         }
     }
 
-    private static void fillBitmap(MapState state, long bitmap, int x, int z, int pixelWidth, int pixelHeight, byte color) {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if ((bitmap & (1L << (i * 8 + j))) != 0) {
-                    fillRect(state, x + j * pixelWidth, z + i * pixelHeight, pixelWidth, pixelHeight, color);
+    private static void fillBitmap(MapState state, byte[] bitmap, int x, int z, int pixelWidth, int pixelHeight, byte color) {
+        for (int i = 0; i < 16; i++) {
+            for (int n = 0; n < 2; n++) {
+                for (int j = 0; j < 8; j++) {
+                    if ((bitmap[i * 2 + n] & 1 << j) != 0) {
+                        fillRect(state, x + (j + n * 8) * pixelWidth, z + i * pixelHeight, pixelWidth, pixelHeight, color);
+                    }
                 }
             }
         }
@@ -64,17 +66,16 @@ public class EmptyMapItemMixin {
         map.setCustomName(Text.of(name));
         map.addHideFlag(ItemStack.TooltipSection.ADDITIONAL);
 
-        if (name.length() == 1) {
-            char ch = name.charAt(0);
-            if (ch < 256) {
-                fillBitmap(state, Mod.getFontBitmap(ch), 32, 32, 8, 8, MapColor.LIME.getRenderColorByte(MapColor.Brightness.HIGH));
+        int[] codePoints = name.codePoints().toArray();
+        if (codePoints.length == 1) {
+            fillBitmap(state, Mod.getFontBitmap(codePoints[0]), 24, 24, 5, 5, MapColor.LIME.getRenderColorByte(MapColor.Brightness.HIGH));
+        } else if (codePoints.length == 2) {
+            for (int i = 0; i < 2; i++) {
+                fillBitmap(state, Mod.getFontBitmap(codePoints[i]), 12 + i * 56, 40, 3, 3, MapColor.LIME.getRenderColorByte(MapColor.Brightness.HIGH));
             }
         } else {
-            for (int i = 0; i < 2; i++) {
-                char ch = name.charAt(i);
-                if (ch < 256) {
-                    fillBitmap(state, Mod.getFontBitmap(ch), i * 64, 32, 8, 8, MapColor.LIME.getRenderColorByte(MapColor.Brightness.HIGH));
-                }
+            for (int i = 0; i < codePoints.length; i++) {
+                fillBitmap(state, Mod.getFontBitmap(codePoints[i]), 12 + i % 2 * 56, 12 + i / 2 * 56, 3, 3, MapColor.LIME.getRenderColorByte(MapColor.Brightness.HIGH));
             }
         }
 
@@ -83,7 +84,7 @@ public class EmptyMapItemMixin {
         return map;
     }
 
-    @Inject(method = "use(Lnet/minecraft/world/World;Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/Hand;)Lnet/minecraft/util/TypedActionResult;", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "use", at = @At("HEAD"), cancellable = true)
     private void use(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<TypedActionResult<ItemStack>> cir) {
         if (world.isClient) {
             return;
