@@ -80,6 +80,7 @@ public class EmptyMapItemMixin {
         nbt.putInt("map", id);
         nbt.putBoolean("map_to_lock", true);
         map.setCustomName(Text.of(name));
+        map.addHideFlag(ItemStack.TooltipSection.ADDITIONAL);
 
         if (name.length() == 1) {
             char ch = name.charAt(0);
