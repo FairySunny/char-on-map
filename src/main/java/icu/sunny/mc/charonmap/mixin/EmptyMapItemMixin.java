@@ -20,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EmptyMapItem.class)
+@SuppressWarnings("unused")
 public class EmptyMapItemMixin {
     @Nullable
     private static String getCustomName(ItemStack itemStack) {
