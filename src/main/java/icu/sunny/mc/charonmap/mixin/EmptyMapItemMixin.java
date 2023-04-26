@@ -74,7 +74,7 @@ public class EmptyMapItemMixin {
                 fillBitmap(state, Mod.getFontBitmap(codePoints[i]), 12 + i * 56, 40, 3, 3, MapColor.LIME.getRenderColorByte(MapColor.Brightness.HIGH));
             }
         } else {
-            for (int i = 0; i < codePoints.length; i++) {
+            for (int i = 0; i < 4 && i < codePoints.length; i++) {
                 fillBitmap(state, Mod.getFontBitmap(codePoints[i]), 12 + i % 2 * 56, 12 + i / 2 * 56, 3, 3, MapColor.LIME.getRenderColorByte(MapColor.Brightness.HIGH));
             }
         }
